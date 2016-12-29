@@ -1,5 +1,6 @@
 #include "fullyconnectedlayer.h"
 #include "layerexception.h"
+#include <cassert>
 
 extern void FullyConnectedLayer_Forward(FullyConnectedNode *node, double* weights, int weightCount, double *input, double *output, int nodeCount);
 extern void FullyConnectedLayer_Backward(FullyConnectedNode *node, double* weights, int weightCount, double *forward, double *previousLayerForward, double* nextlayerBackward, double *output, int nodeCount, double learnRate);
@@ -146,7 +147,8 @@ int FullyConnectedLayer::GetBackwardNodeCount()
 
 double* FullyConnectedLayer::GetWeightsForNode(int index)
 {
-	// TODO: assert for out of bounds index
+	assert(index >= 0);
+	assert(index < nodeCount);
 
 	return weightsHostMem.get() + (weightCount * index);
 }
