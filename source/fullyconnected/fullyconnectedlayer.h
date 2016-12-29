@@ -16,7 +16,6 @@ private:
 	int nodeCount = 0;
 	int forwardCount = 0;
 	int backwardCount = 0;
-	int inputCount = 0;
 	int weightCount = 0;
 	std::unique_ptr<double> weightsHostMem = nullptr;
 	double* weightsDeviceMem = nullptr;

@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="layer.cpp" />
+    <ClCompile Include="layerexception.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="nnetwork.cpp" />
+    <ClCompile Include="output\outputlayer.cpp">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="output\outputlayerconfig.cpp">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="sigmoid\sigmoidlayer.cpp">
+      <Filter>sigmoid</Filter>
+    </ClCompile>
+    <ClCompile Include="sigmoid\sigmoidlayerconfig.cpp">
+      <Filter>sigmoid</Filter>
+    </ClCompile>
+    <ClCompile Include="input\inputlayer.cpp">
+      <Filter>input</Filter>
+    </ClCompile>
+    <ClCompile Include="input\inputlayerconfig.cpp">
+      <Filter>input</Filter>
+    </ClCompile>
+    <ClCompile Include="fullyconnected\fullyconnectedlayer.cpp">
+      <Filter>fullyconnected</Filter>
+    </ClCompile>
+    <ClCompile Include="fullyconnected\fullyconnectedlayerconfig.cpp">
+      <Filter>fullyconnected</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="layer.h" />
+    <ClInclude Include="innetworklayer.h" />
+    <ClInclude Include="layerexception.h" />
+    <ClInclude Include="nnetwork.h" />
+    <ClInclude Include="output\outputlayer.h">
+      <Filter>output</Filter>
+    </ClInclude>
+    <ClInclude Include="output\outputlayerconfig.h">
+      <Filter>output</Filter>
+    </ClInclude>
+    <ClInclude Include="sigmoid\sigmoidlayer.h">
+      <Filter>sigmoid</Filter>
+    </ClInclude>
+    <ClInclude Include="sigmoid\sigmoidlayerconfig.h">
+      <Filter>sigmoid</Filter>
+    </ClInclude>
+    <ClInclude Include="input\inputlayer.h">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="input\inputlayerconfig.h">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="fullyconnected\fullyconnectedlayer.h">
+      <Filter>fullyconnected</Filter>
+    </ClInclude>
+    <ClInclude Include="fullyconnected\fullyconnectedlayerconfig.h">
+      <Filter>fullyconnected</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="fullyconnected">
+      <UniqueIdentifier>{e14eec04-3e53-4e64-b7cc-fa5735d12aa5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="input">
+      <UniqueIdentifier>{17378fb3-e133-4638-9abc-d2dadff6b0f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="output">
+      <UniqueIdentifier>{ca4d434e-c906-4152-a358-6e0f120030e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sigmoid">
+      <UniqueIdentifier>{c98066f0-b26a-413f-b17b-311e09c89bc6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="sigmoid\sigmoidlayer.cu">
+      <Filter>sigmoid</Filter>
+    </CudaCompile>
+    <CudaCompile Include="fullyconnected\fullyconnectedlayer.cu">
+      <Filter>fullyconnected</Filter>
+    </CudaCompile>
+  </ItemGroup>
+</Project>
