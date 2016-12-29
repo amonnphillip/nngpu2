@@ -13,7 +13,7 @@ OutputLayer::OutputLayer(OutputLayerConfig* config, INNetworkLayer* previousLaye
 		nodeCount,
 		0,
 		0,
-		false);
+		true);
 }
 
 void OutputLayer::Dispose()
@@ -30,13 +30,14 @@ void OutputLayer::Forward(INNetworkLayer* previousLayer, INNetworkLayer* nextLay
 {
 	assert(previousLayer->GetForwardNodeCount() == nodeCount);
 
-	memcpy(forwardHostMem.get(), previousLayer->GetForward(), nodeCount * sizeof(double));
+	memcpy(forwardHostMem.get(), previousLayer->GetForwardHostMem(), nodeCount * sizeof(double));
 }
 
 void OutputLayer::Backward(double* input, int inputSize, double learnRate)
 {
 	assert(inputSize == nodeCount);
 
+	// TODO: Optimize
 	double* forward = forwardHostMem.get();
 	double* backward = backwardHostMem.get();
 	for (int index = 0; index < nodeCount; index++)
@@ -46,6 +47,11 @@ void OutputLayer::Backward(double* input, int inputSize, double learnRate)
 		input++;
 		backward++;
 	}
+
+	if (cudaMemcpy(backwardDeviceMem, backwardHostMem.get(), nodeCount * sizeof(double), cudaMemcpyHostToDevice) != cudaError::cudaSuccess)
+	{
+		throw std::runtime_error("OutputLayer backward cudaMemcpy returned an error");
+	}
 }
 
 void OutputLayer::Backward(INNetworkLayer* previousLayer, INNetworkLayer* nextLayer, double learnRate)
@@ -53,14 +59,24 @@ void OutputLayer::Backward(INNetworkLayer* previousLayer, INNetworkLayer* nextLa
 	throw LayerException("Backward variant not valid for OutputLayer layer");
 }
 
-double* OutputLayer::GetForward()
+double* OutputLayer::GetForwardHostMem()
 {
-	return forwardHostMem.get();;
+	return forwardHostMem.get();
 }
 
-double* OutputLayer::GetBackward()
+double* OutputLayer::GetBackwardHostMem()
 {
 	return backwardHostMem.get();
+}
+
+double* OutputLayer::GetForwardDeviceMem()
+{
+	return forwardDeviceMem;
+}
+
+double* OutputLayer::GetBackwardDeviceMem()
+{
+	return backwardDeviceMem;
 }
 
 int OutputLayer::GetForwardNodeCount()

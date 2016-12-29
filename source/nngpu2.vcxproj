@@ -153,10 +153,12 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <CudaCompile Include="fullyconnectedlayer.cu" />
     <CudaCompile Include="sigmoidlayer.cu" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="fullyconnectedlayer.h" />
+    <ClInclude Include="fullyconnectedlayerconfig.h" />
     <ClInclude Include="inputlayer.h" />
     <ClInclude Include="inputlayerconfig.h" />
     <ClInclude Include="layer.h" />
@@ -170,6 +172,7 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="fullyconnectedlayer.cpp" />
+    <ClCompile Include="fullyconnectedlayerconfig.cpp" />
     <ClCompile Include="inputlayer.cpp" />
     <ClCompile Include="inputlayerconfig.cpp" />
     <ClCompile Include="layer.cpp" />

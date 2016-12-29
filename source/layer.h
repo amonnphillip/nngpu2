@@ -12,10 +12,10 @@ protected:
 	std::unique_ptr<nodetype> nodeHostMem;
 	std::unique_ptr<forwardtype> forwardHostMem;
 	std::unique_ptr<backwardtype> backwardHostMem;
-	nodetype *nodeDeviceMem = nullptr;
-	forwardtype *forwardDeviceMem = nullptr;
-	backwardtype *backwardDeviceMem = nullptr;
-	inputtype *inputDeviceMem = nullptr;
+	nodetype* nodeDeviceMem = nullptr;
+	forwardtype* forwardDeviceMem = nullptr;
+	backwardtype* backwardDeviceMem = nullptr;
+	inputtype* inputDeviceMem = nullptr;
 
 	void Initialize(std::string layerName, int forwardSize, int backwardSize, int nodeSize, int inputSize, bool hasDeviceMemory)
 	{

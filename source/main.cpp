@@ -4,8 +4,10 @@
 #include "inputlayer.h"
 #include "inputlayerconfig.h"
 #include "sigmoidlayer.h"
+#include "fullyconnectedlayer.h"
 #include "sigmoidlayerconfig.h"
 #include "outputlayerconfig.h"
+#include "fullyconnectedlayerconfig.h"
 #include "outputlayer.h"
 #include <iostream>
 
@@ -17,7 +19,8 @@ int main()
 	// Create the (very small) network
 	NNetwork* nn = new NNetwork();
 	nn->Add<InputLayer, InputLayerConfig>(new InputLayerConfig(2));
-	nn->Add<SigmoidLayer, SigmoidLayerConfig>(new SigmoidLayerConfig(2));
+	//nn->Add<SigmoidLayer, SigmoidLayerConfig>(new SigmoidLayerConfig(2));
+	nn->Add<FullyConnectedLayer, FullyConnectedLayerConfig>(new FullyConnectedLayerConfig(2));
 	nn->Add<OutputLayer, OutputLayerConfig>(new OutputLayerConfig(2));
 
 	// Train the network
@@ -27,10 +30,10 @@ int main()
 		double input[] = { 1, 1 };
 		nn->Forward(input, 2);
 
-		double* nnoutput = nn->GetLayerForward(1);
+		double* nnoutput = nn->GetLayerForward((int)nn->GetLayerCount() - 2);
 
 		double expected[] = { 1, 0 };
-		nn->Backward(expected, 2, 0.1);
+		nn->Backward(expected, 2, 0.01);
 
 
 		std::cout << "output:\r\n";
@@ -40,7 +43,20 @@ int main()
 		}
 		std::cout << "\r\n";
 
-		nnoutput = nn->GetLayerBackward(2);
+		// Display weights
+		INNetworkLayer* dd = nn->GetLayer(1);
+		FullyConnectedLayer* fullyConnectedLayer = dynamic_cast<FullyConnectedLayer*>(dd);
+		std::cout << "weights:\r\n";
+		for (int index = 0; index < 2; index++)
+		{
+			double* weight = fullyConnectedLayer->GetWeightsForNode(index);
+			
+			std::cout << *weight << " ";
+			weight++;
+			std::cout << *weight << " : ";
+		}
+
+		nnoutput = nn->GetLayerBackward((int)nn->GetLayerCount() - 1);
 		std::cout << "error:\r\n";
 		for (int index = 0; index < 2; index++)
 		{

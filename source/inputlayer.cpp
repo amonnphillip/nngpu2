@@ -44,12 +44,22 @@ void InputLayer::Backward(INNetworkLayer* previousLayer, INNetworkLayer* nextLay
 	
 }
 
-double* InputLayer::GetForward()
+double* InputLayer::GetForwardHostMem()
 {
 	return forwardHostMem.get();
 }
 
-double* InputLayer::GetBackward()
+double* InputLayer::GetBackwardHostMem()
+{
+	return nullptr;
+}
+
+double* InputLayer::GetForwardDeviceMem()
+{
+	return forwardDeviceMem;
+}
+
+double* InputLayer::GetBackwardDeviceMem()
 {
 	return nullptr;
 }

@@ -21,8 +21,10 @@ public:
 	virtual void Backward(double* input, int inputSize, double learnRate);
 	virtual void Backward(INNetworkLayer* previousLayer, INNetworkLayer* nextLayer, double learnRate);
 	virtual void Dispose();
-	virtual double* GetForward();
-	virtual double* GetBackward();
+	virtual double* GetForwardHostMem();
+	virtual double* GetBackwardHostMem();
+	virtual double* GetForwardDeviceMem();
+	virtual double* GetBackwardDeviceMem();
 	virtual int GetForwardNodeCount();
 	virtual int GetBackwardNodeCount();
 };

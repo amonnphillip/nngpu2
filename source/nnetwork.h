@@ -26,5 +26,9 @@ public:
 	double* GetLayerForward(int layerIndex);
 	double* GetLayerBackward(int layerIndex);
 	void Dispose();
-
+	size_t GetLayerCount();
+	INNetworkLayer* GetLayer(int layerIndex)
+	{
+		return layers.at(layerIndex);
+	}
 };

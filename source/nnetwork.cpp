@@ -55,12 +55,12 @@ void NNetwork::Backward(double* expected, int expectedSize, double learnRate)
 
 double* NNetwork::GetLayerForward(int layerIndex)
 {
-	return layers.at(layerIndex)->GetForward();
+	return layers.at(layerIndex)->GetForwardHostMem();
 }
 
 double* NNetwork::GetLayerBackward(int layerIndex)
 {
-	return layers.at(layerIndex)->GetBackward();
+	return layers.at(layerIndex)->GetBackwardHostMem();
 }
 
 void NNetwork::Dispose()
@@ -69,4 +69,9 @@ void NNetwork::Dispose()
 	{
 		layers.pop_back();
 	}
+}
+
+size_t NNetwork::GetLayerCount()
+{
+	return layers.size();
 }

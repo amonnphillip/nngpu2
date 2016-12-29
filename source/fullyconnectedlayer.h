@@ -1,13 +1,13 @@
 #pragma once
 
 #include "innetworklayer.h"
+#include "fullyconnectedlayerconfig.h"
 #include "layer.h"
 
 class FullyConnectedNode
 {
-	static const int maxWeights = 100;
-	int weightCount = 0;
-	double weights[maxWeights];
+public:
+	double bias;
 };
 
 class FullyConnectedLayer : public Layer<FullyConnectedNode, double, double, double>, public INNetworkLayer
@@ -17,9 +17,23 @@ private:
 	int forwardCount = 0;
 	int backwardCount = 0;
 	int inputCount = 0;
+	int weightCount = 0;
+	std::unique_ptr<double> weightsHostMem = nullptr;
+	double* weightsDeviceMem = nullptr;
 
 public:
-	FullyConnectedLayer(int dimentionx, int dimentiony, int dimentionz, int forwardx, int forwardy, int forwardz, INNetworkLayer* previousLayer);
-
+	FullyConnectedLayer(FullyConnectedLayerConfig* config, INNetworkLayer* previousLayer);
+	virtual void Forward(double* input, int inputSize);
+	virtual void Forward(INNetworkLayer* previousLayer, INNetworkLayer* nextLayer);
+	virtual void Backward(double* input, int inputSize, double learnRate);
+	virtual void Backward(INNetworkLayer* previousLayer, INNetworkLayer* nextLayer, double learnRate);
+	virtual void Dispose();
+	virtual double* GetForwardHostMem();
+	virtual double* GetBackwardHostMem();
+	virtual double* GetForwardDeviceMem();
+	virtual double* GetBackwardDeviceMem();
+	virtual int GetForwardNodeCount();
+	virtual int GetBackwardNodeCount();
+	double* GetWeightsForNode(int index);
 };
 

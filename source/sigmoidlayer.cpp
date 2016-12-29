@@ -69,7 +69,7 @@ void SigmoidLayer::Forward(double* input, int inputSize)
 
 void SigmoidLayer::Forward(INNetworkLayer* previousLayer, INNetworkLayer* nextLayer)
 {
-	if (cudaMemcpy(inputDeviceMem, previousLayer->GetForward(), nodeCount * sizeof(double), cudaMemcpyHostToDevice) != cudaError::cudaSuccess)
+	if (cudaMemcpy(inputDeviceMem, previousLayer->GetForwardHostMem(), nodeCount * sizeof(double), cudaMemcpyHostToDevice) != cudaError::cudaSuccess)
 	{
 		throw std::runtime_error("Sigmoid forward cudaMemcpy returned an error");
 	}
@@ -89,7 +89,7 @@ void SigmoidLayer::Backward(double* input, int inputSize, double learnRate)
 
 void SigmoidLayer::Backward(INNetworkLayer* previousLayer, INNetworkLayer* nextLayer, double learnRate)
 {
-	if (cudaMemcpy(inputDeviceMem, nextLayer->GetBackward(), nodeCount * sizeof(double), cudaMemcpyHostToDevice) != cudaError::cudaSuccess)
+	if (cudaMemcpy(inputDeviceMem, nextLayer->GetBackwardHostMem(), nodeCount * sizeof(double), cudaMemcpyHostToDevice) != cudaError::cudaSuccess)
 	{
 		throw std::runtime_error("Sigmoid backward cudaMemcpy returned an error");
 	}
@@ -102,14 +102,24 @@ void SigmoidLayer::Backward(INNetworkLayer* previousLayer, INNetworkLayer* nextL
 	}
 }
 
-double* SigmoidLayer::GetForward()
+double* SigmoidLayer::GetForwardHostMem()
 {
 	return forwardHostMem.get();
 }
 
-double* SigmoidLayer::GetBackward()
+double* SigmoidLayer::GetBackwardHostMem()
 {
 	return backwardHostMem.get();
+}
+
+double* SigmoidLayer::GetForwardDeviceMem()
+{
+	return forwardDeviceMem;
+}
+
+double* SigmoidLayer::GetBackwardDeviceMem()
+{
+	return backwardDeviceMem;
 }
 
 int SigmoidLayer::GetForwardNodeCount()
