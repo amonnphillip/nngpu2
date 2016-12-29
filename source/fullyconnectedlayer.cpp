@@ -14,8 +14,7 @@ FullyConnectedLayer::FullyConnectedLayer(FullyConnectedLayerConfig* config, INNe
 		"fullyconnected",
 		forwardCount,
 		previousLayerCount,
-		forwardCount,
-		forwardCount,
+		nodeCount,
 		true);
 
 	FullyConnectedNode* nodes = nodeHostMem.get();
@@ -57,8 +56,13 @@ FullyConnectedLayer::FullyConnectedLayer(FullyConnectedLayerConfig* config, INNe
 
 void FullyConnectedLayer::Dispose()
 {
-
-	// TODO: DISPOSE OF WEIGHT MEM
+	if (weightsDeviceMem != nullptr)
+	{
+		if (cudaFree(weightsDeviceMem) != cudaError::cudaSuccess)
+		{
+			throw std::bad_alloc();
+		}
+	}
 
 	Layer::Dispose();
 }
@@ -70,12 +74,7 @@ void FullyConnectedLayer::Forward(double* input, int inputSize)
 
 void FullyConnectedLayer::Forward(INNetworkLayer* previousLayer, INNetworkLayer* nextLayer)
 {
-	if (cudaMemcpy(inputDeviceMem, previousLayer->GetForwardHostMem(), nodeCount * sizeof(double), cudaMemcpyHostToDevice) != cudaError::cudaSuccess)
-	{
-		throw std::runtime_error("Sigmoid forward cudaMemcpy returned an error");
-	}
-
-	FullyConnectedLayer_Forward(nodeDeviceMem, weightsDeviceMem, weightCount, inputDeviceMem, forwardDeviceMem, nodeCount);
+	FullyConnectedLayer_Forward(nodeDeviceMem, weightsDeviceMem, weightCount, previousLayer->GetForwardDeviceMem(), forwardDeviceMem, nodeCount);
 
 	if (cudaMemcpy(forwardHostMem.get(), forwardDeviceMem, nodeCount * sizeof(double), cudaMemcpyDeviceToHost) != cudaError::cudaSuccess)
 	{
@@ -99,25 +98,19 @@ void FullyConnectedLayer::Backward(INNetworkLayer* previousLayer, INNetworkLayer
 
 	if (cudaMemcpy(backwardDeviceMem, backwardHostMem.get(), backwardCount * sizeof(double), cudaMemcpyHostToDevice) != cudaError::cudaSuccess)
 	{
-		throw std::runtime_error("Sigmoid backward cudaMemcpy returned an error");
+		throw std::runtime_error("FullyConnectedLayer backward cudaMemcpy returned an error");
 	}
 
-	// TODO: NOT REALLY NEEDED! CAN JUST USE DEVICE MEMORY INSTEAD
-	if (cudaMemcpy(inputDeviceMem, previousLayer->GetForwardHostMem(), nodeCount * sizeof(double), cudaMemcpyHostToDevice) != cudaError::cudaSuccess)
-	{
-		throw std::runtime_error("Sigmoid backward cudaMemcpy returned an error");
-	}
-
-	FullyConnectedLayer_Backward(nodeDeviceMem, weightsDeviceMem, weightCount, forwardDeviceMem, inputDeviceMem, nextLayer->GetBackwardDeviceMem(), backwardDeviceMem, nodeCount, learnRate);
+	FullyConnectedLayer_Backward(nodeDeviceMem, weightsDeviceMem, weightCount, forwardDeviceMem, previousLayer->GetForwardDeviceMem(), nextLayer->GetBackwardDeviceMem(), backwardDeviceMem, nodeCount, learnRate);
 
 	if (cudaMemcpy(weightsHostMem.get(), weightsDeviceMem, weightCount * nodeCount * sizeof(double), cudaMemcpyDeviceToHost) != cudaError::cudaSuccess)
 	{
-		throw std::runtime_error("Sigmoid backward cudaMemcpy returned an error");
+		throw std::runtime_error("FullyConnectedLayer backward cudaMemcpy returned an error");
 	}
 
 	if (cudaMemcpy(backwardHostMem.get(), backwardDeviceMem, nodeCount * sizeof(double), cudaMemcpyDeviceToHost) != cudaError::cudaSuccess)
 	{
-		throw std::runtime_error("Sigmoid backward cudaMemcpy returned an error");
+		throw std::runtime_error("FullyConnectedLayer backward cudaMemcpy returned an error");
 	}
 }
 

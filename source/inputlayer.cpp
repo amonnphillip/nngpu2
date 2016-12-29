@@ -13,8 +13,7 @@ InputLayer::InputLayer(InputLayerConfig* config, INNetworkLayer* previousLayer)
 		nodeCount,
 		0,
 		0,
-		0,
-		false);
+		true);
 }
 
 void InputLayer::Dispose()
@@ -26,7 +25,13 @@ void InputLayer::Forward(double* input, int inputSize)
 {
 	assert(inputSize == nodeCount);
 
+	// TODO: Maybe we dont need to copy here?
 	memcpy(forwardHostMem.get(), input, nodeCount * sizeof(double));
+
+	if (cudaMemcpy(forwardDeviceMem, forwardHostMem.get(), nodeCount * sizeof(double), cudaMemcpyHostToDevice) != cudaError::cudaSuccess)
+	{
+		throw std::runtime_error("InputLayer forward cudaMemcpy returned an error");
+	}
 }
 
 void InputLayer::Forward(INNetworkLayer* previousLayer, INNetworkLayer* nextLayer)
@@ -41,7 +46,7 @@ void InputLayer::Backward(double* input, int inputSize, double learnRate)
 
 void InputLayer::Backward(INNetworkLayer* previousLayer, INNetworkLayer* nextLayer, double learnRate)
 {
-	
+	throw LayerException("Backward variant not valid for InputLayer layer");
 }
 
 double* InputLayer::GetForwardHostMem()

@@ -15,9 +15,8 @@ protected:
 	nodetype* nodeDeviceMem = nullptr;
 	forwardtype* forwardDeviceMem = nullptr;
 	backwardtype* backwardDeviceMem = nullptr;
-	inputtype* inputDeviceMem = nullptr;
 
-	void Initialize(std::string layerName, int forwardSize, int backwardSize, int nodeSize, int inputSize, bool hasDeviceMemory)
+	void Initialize(std::string layerName, int forwardSize, int backwardSize, int nodeSize, bool hasDeviceMemory)
 	{
 		assert(layerName.length() != 0);
 		assert(nodeHostMem.get() == nullptr);
@@ -26,7 +25,6 @@ protected:
 		assert(nodeDeviceMem == nullptr);
 		assert(forwardDeviceMem == nullptr);
 		assert(backwardDeviceMem == nullptr);
-		assert(inputDeviceMem == nullptr);
 
 		this->layerName = layerName;
 
@@ -59,14 +57,6 @@ protected:
 					throw std::bad_alloc();
 				}
 			}
-
-			if (inputSize != 0)
-			{
-				if (cudaMalloc((void**)&inputDeviceMem, inputSize * sizeof(inputtype)) != cudaError::cudaSuccess)
-				{
-					throw std::bad_alloc();
-				}
-			}
 		}
 	}
 
@@ -91,14 +81,6 @@ protected:
 		if (backwardDeviceMem != nullptr)
 		{
 			if (cudaFree(backwardDeviceMem) != cudaError::cudaSuccess)
-			{
-				throw std::bad_alloc();
-			}
-		}
-
-		if (inputDeviceMem != nullptr)
-		{
-			if (cudaFree(inputDeviceMem) != cudaError::cudaSuccess)
 			{
 				throw std::bad_alloc();
 			}

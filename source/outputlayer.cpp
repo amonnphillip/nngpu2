@@ -12,7 +12,6 @@ OutputLayer::OutputLayer(OutputLayerConfig* config, INNetworkLayer* previousLaye
 		nodeCount,
 		nodeCount,
 		0,
-		0,
 		true);
 }
 
