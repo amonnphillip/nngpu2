@@ -27,4 +27,8 @@ public:
 	virtual double* GetBackwardDeviceMem();
 	virtual int GetForwardNodeCount();
 	virtual int GetBackwardNodeCount();
+	virtual int GetWidth();
+	virtual int GetHeight();
+	virtual int GetDepth();
+	virtual std::string GetLayerName();
 };

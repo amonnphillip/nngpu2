@@ -87,3 +87,23 @@ int OutputLayer::GetBackwardNodeCount()
 {
 	return nodeCount;
 }
+
+int OutputLayer::GetWidth()
+{
+	return nodeCount;
+}
+
+int OutputLayer::GetHeight()
+{
+	return 1;
+}
+
+int OutputLayer::GetDepth()
+{
+	return 1;
+}
+
+std::string OutputLayer::GetLayerName()
+{
+	return Layer::GetLayerName();
+}

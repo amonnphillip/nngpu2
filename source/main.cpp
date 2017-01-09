@@ -5,11 +5,65 @@
 #include "inputlayerconfig.h"
 #include "sigmoidlayer.h"
 #include "fullyconnectedlayer.h"
-#include "sigmoidlayerconfig.h"
-#include "outputlayerconfig.h"
-#include "fullyconnectedlayerconfig.h"
+#include "relulayer.h"
+#include "poollayer.h"
 #include "outputlayer.h"
 #include <iostream>
+
+void DebugPrintFullyConnectedLayer(FullyConnectedLayer* fullyConnectedLayer)
+{
+	int nodeCount = fullyConnectedLayer->GetForwardNodeCount();
+	int weightCount = fullyConnectedLayer->GetWeightCount();
+
+	std::cout << "fully connected layer:\r\n";
+
+	std::cout << "weights:\r\n";
+	for (int index = 0; index < nodeCount; index++)
+	{
+		double* weight = fullyConnectedLayer->GetWeightsForNode(index);
+
+		for (int weightIndex = 0; weightIndex < weightCount; weightIndex++)
+		{
+			if (weightIndex + 1 != weightCount)
+			{
+				std::cout << *weight << " ";
+			}
+			else
+			{
+				std::cout << *weight << " : ";
+			}
+			weight++;
+		}
+	}
+
+	std::cout << "\r\n";
+	std::cout << "bias:\r\n";
+	FullyConnectedNode* node = fullyConnectedLayer->GetNodeMem();
+	for (int index = 0; index < nodeCount; index++)
+	{
+		if (index + 1 != nodeCount)
+		{
+			std::cout << node->bias << " ";
+		}
+		else
+		{
+			std::cout << node->bias << " ";
+		}
+		node++;
+	}
+
+	std::cout << "\r\n";
+
+	std::cout << "forward:\r\n";
+	double* output = fullyConnectedLayer->GetForwardHostMem();
+	for (int index = 0; index < nodeCount; index++)
+	{
+		std::cout << *output << " ";
+		output++;
+	}
+
+	std::cout << "\r\n\r\n";
+}
 
 int main()
 {
@@ -18,53 +72,100 @@ int main()
 
 	// Create the (very small) network
 	NNetwork* nn = new NNetwork();
-	nn->Add<InputLayer, InputLayerConfig>(new InputLayerConfig(2));
-	//nn->Add<SigmoidLayer, SigmoidLayerConfig>(new SigmoidLayerConfig(2));
+	nn->Add<InputLayer, InputLayerConfig>(new InputLayerConfig(16));
+	nn->Add<FullyConnectedLayer, FullyConnectedLayerConfig>(new FullyConnectedLayerConfig(16));
+	//nn->Add<FullyConnectedLayer, FullyConnectedLayerConfig>(new FullyConnectedLayerConfig(16));
+	nn->Add<ReluLayer, ReluLayerConfig>(new ReluLayerConfig(4, 4, 1));
+	nn->Add<PoolLayer, PoolLayerConfig>(new PoolLayerConfig(1, 2));
+	//nn->Add<FullyConnectedLayer, FullyConnectedLayerConfig>(new FullyConnectedLayerConfig(2));
 	nn->Add<FullyConnectedLayer, FullyConnectedLayerConfig>(new FullyConnectedLayerConfig(2));
 	nn->Add<OutputLayer, OutputLayerConfig>(new OutputLayerConfig(2));
 
 	// Train the network
-	int interations = 10000;
-	while (interations > 0)
+	int iterationCount = 0;
+	int interationMax = 3000;
+	while (iterationCount < interationMax)
 	{
-		double input[] = { 1, 1 };
-		nn->Forward(input, 2);
+		const int inputCount = 16;
+		const int expectedCount = 2;
+		double* input;
+		double* expected;
 
-		double* nnoutput = nn->GetLayerForward((int)nn->GetLayerCount() - 2);
-
-		double expected[] = { 1, 0 };
-		nn->Backward(expected, 2, 0.01);
-
-
-		std::cout << "output:\r\n";
-		for (int index = 0; index < 2; index++)
+		if (iterationCount & 1)
 		{
-			std::cout << nnoutput[index] << " ";
-		}
-		std::cout << "\r\n";
+			double inputAlt[] = {
+				1, 1,  0, 0,
+				1, 1,  0, 0,
+				0, 0,  0, 0,
+				0, 0,  0, 0,
+			};
+			input = inputAlt;
 
-		// Display weights
-		INNetworkLayer* dd = nn->GetLayer(1);
-		FullyConnectedLayer* fullyConnectedLayer = dynamic_cast<FullyConnectedLayer*>(dd);
-		std::cout << "weights:\r\n";
-		for (int index = 0; index < 2; index++)
+			double expectedAlt[] = { 1, 0 };
+			expected = expectedAlt;
+		}
+		else
 		{
-			double* weight = fullyConnectedLayer->GetWeightsForNode(index);
-			
-			std::cout << *weight << " ";
-			weight++;
-			std::cout << *weight << " : ";
+			double inputAlt[] = {
+				0, 0,  1, 1,
+				0, 0,  1, 1,
+				1, 1,  0, 0,
+				1, 1,  0, 0,
+			};
+			input = inputAlt;
+
+			double expectedAlt[] = { 0, 1 };
+			expected = expectedAlt;
 		}
 
-		nnoutput = nn->GetLayerBackward((int)nn->GetLayerCount() - 1);
-		std::cout << "error:\r\n";
-		for (int index = 0; index < 2; index++)
+
+		nn->Forward(input, inputCount);
+		nn->Backward(expected, expectedCount, 0.01);
+
+
+		std::cout << "iteration: " << iterationCount << "\r\n";
+		for (int layerIndex = 0; layerIndex < nn->GetLayerCount(); layerIndex++)
 		{
-			std::cout << nnoutput[index] << " ";
+			INNetworkLayer* layer = nn->GetLayer(layerIndex);
+			std::string layerName = layer->GetLayerName();
+			if (layerName == "input")
+			{
+				double* forward = layer->GetForwardHostMem();
+				int forwardCount = layer->GetForwardNodeCount();
+				std::cout << "input:\r\n";
+				for (int index = 0; index < forwardCount; index++)
+				{
+					std::cout << forward[index] << " ";
+				}
+			}
+			else if (layerName == "fullyconnected")
+			{
+				FullyConnectedLayer* fullyConnectedLayer = dynamic_cast<FullyConnectedLayer*>(layer);
+				DebugPrintFullyConnectedLayer(fullyConnectedLayer);
+			}
+			else if (layerName == "output")
+			{
+				double* forward = layer->GetForwardHostMem();
+				int forwardCount = layer->GetForwardNodeCount();
+				std::cout << "output:\r\n";
+				for (int index = 0; index < forwardCount; index++)
+				{
+					std::cout << forward[index] << " ";
+				}
+				std::cout << "\r\n";
+				std::cout << "expected:\r\n";
+				for (int index = 0; index < forwardCount; index++)
+				{
+					std::cout << expected[index] << " ";
+				}
+			}
+
+			std::cout << "\r\n";
 		}
+
 		std::cout << "\r\n\r\n";
 
-		interations--;
+		iterationCount++;
 	}
 	
 	// Dispose of the resouces we allocated and close
@@ -73,3 +174,4 @@ int main()
 
 	cudaDeviceReset();
 }
+

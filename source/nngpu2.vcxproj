@@ -94,7 +94,7 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;WIN64;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(MSBuildProjectDirectory)\fullyconnected;$(MSBuildProjectDirectory)\input;$(MSBuildProjectDirectory)\output;$(MSBuildProjectDirectory)\sigmoid;$(MSBuildProjectDirectory)\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(MSBuildProjectDirectory)\fullyconnected;$(MSBuildProjectDirectory)\input;$(MSBuildProjectDirectory)\output;$(MSBuildProjectDirectory)\sigmoid;$(MSBuildProjectDirectory)\;$(MSBuildProjectDirectory)\relu;$(MSBuildProjectDirectory)\pool;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -164,6 +164,10 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
     <ClInclude Include="nnetwork.h" />
     <ClInclude Include="output\outputlayer.h" />
     <ClInclude Include="output\outputlayerconfig.h" />
+    <ClInclude Include="pool\poollayer.h" />
+    <ClInclude Include="pool\poollayerconfig.h" />
+    <ClInclude Include="relu\relulayerconfig.h" />
+    <ClInclude Include="relu\relulayer.h" />
     <ClInclude Include="sigmoid\sigmoidlayer.h" />
     <ClInclude Include="sigmoid\sigmoidlayerconfig.h" />
   </ItemGroup>
@@ -178,11 +182,17 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
     <ClCompile Include="nnetwork.cpp" />
     <ClCompile Include="output\outputlayer.cpp" />
     <ClCompile Include="output\outputlayerconfig.cpp" />
+    <ClCompile Include="pool\poollayer.cpp" />
+    <ClCompile Include="pool\poollayerconfig.cpp" />
+    <ClCompile Include="relu\relulayerconfig.cpp" />
+    <ClCompile Include="relu\relulayer.cpp" />
     <ClCompile Include="sigmoid\sigmoidlayer.cpp" />
     <ClCompile Include="sigmoid\sigmoidlayerconfig.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="fullyconnected\fullyconnectedlayer.cu" />
+    <CudaCompile Include="pool\poollayer.cu" />
+    <CudaCompile Include="relu\relulayer.cu" />
     <CudaCompile Include="sigmoid\sigmoidlayer.cu" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

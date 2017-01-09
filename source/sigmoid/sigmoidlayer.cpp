@@ -120,3 +120,8 @@ int SigmoidLayer::GetBackwardNodeCount()
 {
 	return nodeCount;
 }
+
+std::string SigmoidLayer::GetLayerName()
+{
+	return Layer::GetLayerName();
+}

@@ -78,3 +78,23 @@ int InputLayer::GetBackwardNodeCount()
 {
 	return 0;
 }
+
+int InputLayer::GetWidth()
+{
+	return nodeCount;
+}
+
+int InputLayer::GetHeight()
+{
+	return 1;
+}
+
+int InputLayer::GetDepth()
+{
+	return 1;
+}
+
+std::string InputLayer::GetLayerName()
+{
+	return Layer::GetLayerName();
+}

@@ -1,20 +1,29 @@
 #pragma once
 
-#include "inputlayerconfig.h"
 #include "innetworklayer.h"
+#include "poollayerconfig.h"
 #include "layer.h"
 
-class InputNode
+class PoolNode
 {
 };
 
-class InputLayer : public Layer<InputNode, double, double, double>, public INNetworkLayer
+class PoolLayer : public Layer<PoolNode, double, double, double>, public INNetworkLayer
 {
 private:
 	int nodeCount = 0;
+	int forwardCount = 0;
+	int backwardCount = 0;
+	int layerWidth = 0;
+	int layerHeight = 0;
+	int layerDepth = 0;
+	int spatiallExtent = 0;
+	int stride = 0;
+	std::unique_ptr<int> backDataHostMem = nullptr;
+	int* backDataDeviceMem = nullptr;
 
 public:
-	InputLayer(InputLayerConfig* config, INNetworkLayer* previousLayer);
+	PoolLayer(PoolLayerConfig* config, INNetworkLayer* previousLayer);
 	virtual void Forward(double* input, int inputSize);
 	virtual void Forward(INNetworkLayer* previousLayer, INNetworkLayer* nextLayer);
 	virtual void Backward(double* input, int inputSize, double learnRate);
@@ -31,3 +40,4 @@ public:
 	virtual int GetDepth();
 	virtual std::string GetLayerName();
 };
+

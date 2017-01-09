@@ -17,9 +17,6 @@
     <ClCompile Include="sigmoid\sigmoidlayerconfig.cpp">
       <Filter>sigmoid</Filter>
     </ClCompile>
-    <ClCompile Include="input\inputlayer.cpp">
-      <Filter>input</Filter>
-    </ClCompile>
     <ClCompile Include="input\inputlayerconfig.cpp">
       <Filter>input</Filter>
     </ClCompile>
@@ -28,6 +25,21 @@
     </ClCompile>
     <ClCompile Include="fullyconnected\fullyconnectedlayerconfig.cpp">
       <Filter>fullyconnected</Filter>
+    </ClCompile>
+    <ClCompile Include="relu\relulayer.cpp">
+      <Filter>relu</Filter>
+    </ClCompile>
+    <ClCompile Include="relu\relulayerconfig.cpp">
+      <Filter>relu</Filter>
+    </ClCompile>
+    <ClCompile Include="pool\poollayer.cpp">
+      <Filter>pool</Filter>
+    </ClCompile>
+    <ClCompile Include="pool\poollayerconfig.cpp">
+      <Filter>pool</Filter>
+    </ClCompile>
+    <ClCompile Include="input\inputlayer.cpp">
+      <Filter>input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -59,6 +71,18 @@
     <ClInclude Include="fullyconnected\fullyconnectedlayerconfig.h">
       <Filter>fullyconnected</Filter>
     </ClInclude>
+    <ClInclude Include="relu\relulayer.h">
+      <Filter>relu</Filter>
+    </ClInclude>
+    <ClInclude Include="relu\relulayerconfig.h">
+      <Filter>relu</Filter>
+    </ClInclude>
+    <ClInclude Include="pool\poollayer.h">
+      <Filter>pool</Filter>
+    </ClInclude>
+    <ClInclude Include="pool\poollayerconfig.h">
+      <Filter>pool</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="fullyconnected">
@@ -73,6 +97,12 @@
     <Filter Include="sigmoid">
       <UniqueIdentifier>{c98066f0-b26a-413f-b17b-311e09c89bc6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="relu">
+      <UniqueIdentifier>{ceb5c573-586a-4bfe-9317-54ce5b3c4274}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pool">
+      <UniqueIdentifier>{2b63a404-082a-4f06-af64-5bce88ebf806}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="sigmoid\sigmoidlayer.cu">
@@ -80,6 +110,12 @@
     </CudaCompile>
     <CudaCompile Include="fullyconnected\fullyconnectedlayer.cu">
       <Filter>fullyconnected</Filter>
+    </CudaCompile>
+    <CudaCompile Include="relu\relulayer.cu">
+      <Filter>relu</Filter>
+    </CudaCompile>
+    <CudaCompile Include="pool\poollayer.cu">
+      <Filter>pool</Filter>
     </CudaCompile>
   </ItemGroup>
 </Project>

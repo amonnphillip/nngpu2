@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 class INNetworkLayer
 {
@@ -14,4 +15,8 @@ public:
 	virtual double* GetBackwardDeviceMem() = 0;
 	virtual int GetForwardNodeCount() = 0;
 	virtual int GetBackwardNodeCount() = 0;
+	virtual int GetWidth() = 0;
+	virtual int GetHeight() = 0;
+	virtual int GetDepth() = 0;
+	virtual std::string GetLayerName() = 0;
 };

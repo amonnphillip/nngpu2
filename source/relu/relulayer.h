@@ -1,20 +1,25 @@
 #pragma once
 
-#include "inputlayerconfig.h"
 #include "innetworklayer.h"
+#include "relulayerconfig.h"
 #include "layer.h"
 
-class InputNode
+class ReluNode
 {
 };
 
-class InputLayer : public Layer<InputNode, double, double, double>, public INNetworkLayer
+class ReluLayer : public Layer<ReluNode, double, double, double>, public INNetworkLayer
 {
 private:
 	int nodeCount = 0;
+	int forwardCount = 0;
+	int backwardCount = 0;
+	int layerWidth = 0;
+	int layerHeight = 0;
+	int layerDepth = 0;
 
 public:
-	InputLayer(InputLayerConfig* config, INNetworkLayer* previousLayer);
+	ReluLayer(ReluLayerConfig* config, INNetworkLayer* previousLayer);
 	virtual void Forward(double* input, int inputSize);
 	virtual void Forward(INNetworkLayer* previousLayer, INNetworkLayer* nextLayer);
 	virtual void Backward(double* input, int inputSize, double learnRate);
@@ -31,3 +36,4 @@ public:
 	virtual int GetDepth();
 	virtual std::string GetLayerName();
 };
+

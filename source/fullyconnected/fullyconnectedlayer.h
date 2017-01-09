@@ -17,6 +17,9 @@ private:
 	int forwardCount = 0;
 	int backwardCount = 0;
 	int weightCount = 0;
+	int layerWidth = 0;
+	int layerHeight = 0;
+	int layerDepth = 0;
 	std::unique_ptr<double> weightsHostMem = nullptr;
 	double* weightsDeviceMem = nullptr;
 
@@ -33,6 +36,12 @@ public:
 	virtual double* GetBackwardDeviceMem();
 	virtual int GetForwardNodeCount();
 	virtual int GetBackwardNodeCount();
+	virtual int GetWidth();
+	virtual int GetHeight();
+	virtual int GetDepth();
 	double* GetWeightsForNode(int index);
+	int GetWeightCount();
+	virtual std::string GetLayerName();
+	FullyConnectedNode* GetNodeMem();
 };
 

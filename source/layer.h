@@ -86,4 +86,9 @@ protected:
 			}
 		}
 	}
+
+	virtual std::string GetLayerName()
+	{
+		return layerName;
+	}
 };
